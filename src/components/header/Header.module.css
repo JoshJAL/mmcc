@@ -1,0 +1,52 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+  position: fixed;
+  padding: 0 0 15px 0;
+  background-color: #ffffff;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+  top: 0;
+  height: 90px;
+  z-index: 1;
+}
+
+.headerContentContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1400px;
+}
+
+.headerContentContainer > img {
+  width: 20%;
+  margin: 10px 0 0 0;
+}
+
+.dropdownFilter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0 0 0;
+}
+
+@media screen and (max-width: 960px) {
+  .header {
+    height: 250px;
+    z-index: 1;
+  }
+
+  .headerContentContainer {
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .headerContentContainer > img {
+    width: 50%;
+    margin: 20px 0 10px 0;
+  }
+}
