@@ -15,7 +15,6 @@ export default function Card({ user }: { user: User }) {
   const [timezoneDescription, setTimezoneDescription] = useState(user.location.timezone.description);
   const [timezoneOffset, setTimezoneOffset] = useState(user.location.timezone.offset);
 
-
   return (
     <div className={styles.card} >
       <p className={styles.card__button} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</p>
