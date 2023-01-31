@@ -1,13 +1,14 @@
 import styles from './Card.module.css';
 
 interface EditInputFiledProps {
+  name: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
-  stateToSet: React.Dispatch<React.SetStateAction<string>>;
   type?: string;
 }
 
-export default function EditInputField({ value, stateToSet, type = 'text' }: EditInputFiledProps) {
+export default function EditInputField({ name, value, handleChange, type = 'text' }: EditInputFiledProps) {
   return (
-    <input className={styles.card__editInput} value={value} onChange={(e) => stateToSet(e.target.value)} type={type} />
+    <input className={styles.card__editInput} value={value} onChange={(e) => handleChange(e)} type={type} name={name} />
   )
 }

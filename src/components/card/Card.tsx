@@ -1,73 +1,71 @@
-import { User } from "../../types/user.types";
+import { DisplayedUser } from "../../types/displayedUser.types";
 import styles from "./Card.module.css";
 import { useState } from "react";
 import EditInputField from "./EditInputField";
 
-export default function Card({ user }: { user: User }) {
+export default function Card({ user, updateUser }: { user: DisplayedUser, updateUser: (data: DisplayedUser) => void }) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e)
+    updateUser({
+      ...user, [e.target.name]: e.target.value
+    })
+  }
+
   const [editing, setEditing] = useState(false);
-  const [firstName, setFirstName] = useState(user.name.first);
-  const [lastName, setLastName] = useState(user.name.last);
-  const [email, setEmail] = useState(user.email);
-  const [phoneNumber, setPhoneNumber] = useState(user.cell);
-  const [country, setCountry] = useState(user.location.country);
-  const [city, setCity] = useState(user.location.city);
-  const [state, setState] = useState(user.location.state);
-  const [timezoneDescription, setTimezoneDescription] = useState(user.location.timezone.description);
-  const [timezoneOffset, setTimezoneOffset] = useState(user.location.timezone.offset);
 
   return (
     <div className={styles.card} >
       <p className={styles.card__button} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</p>
-      <img className={styles.card__picture} src={user.picture.large} />
+      <img className={styles.card__picture} src={user.picture} />
       {editing ? (
         <>
           <h3 className={styles.card__name}>
             First Name:
-            <EditInputField value={firstName} stateToSet={setFirstName} />
+            <EditInputField value={user.firstName} handleChange={handleChange} name={'firstName'} />
             <br />
             <br />
             Last Name:
-            <EditInputField value={lastName} stateToSet={setLastName} />
+            <EditInputField value={user.lastName} handleChange={handleChange} name={'lastName'} />
           </h3>
           <p>
             <span className={styles.card__sectionTitle}>Email:</span>{' '}
-            <EditInputField value={email} stateToSet={setEmail} type={'email'} />
+            <EditInputField value={user.email} handleChange={handleChange} name={'email'} type={'email'} />
           </p>
           <p>
             <span className={styles.card__sectionTitle}>Phone Number:</span>{' '}
-            <EditInputField value={phoneNumber} stateToSet={setPhoneNumber} type={'tel'} />
+            <EditInputField value={user.phone} handleChange={handleChange} name={'phone'} type={'tel'} />
           </p>
           <p>
             <span className={styles.card__sectionTitle}>Country</span>{' '}
-            <EditInputField value={country} stateToSet={setCountry} />
+            <EditInputField value={user.country} handleChange={handleChange} name={'country'} />
           </p>
           <p>
             <span className={styles.card__sectionTitle}>City:</span>{' '}
-            <EditInputField value={city} stateToSet={setCity} />
+            <EditInputField value={user.city} handleChange={handleChange} name={'city'} />
           </p>
           <p>
             <span className={styles.card__sectionTitle}>State:</span>{' '}
-            <EditInputField value={state} stateToSet={setState} />
+            <EditInputField value={user.state} handleChange={handleChange} name={'state'} />
           </p>
           <p>
             <span className={styles.card__sectionTitle}>Time Zone Description:</span>{' '}
-            <EditInputField value={timezoneDescription} stateToSet={setTimezoneDescription} />
+            <EditInputField value={user.timezoneDescription} handleChange={handleChange} name={'timezoneDescription'} />
           </p>
           <p>
             <span className={styles.card__sectionTitle}>Time Zone Offset:</span>{' '}
-            <EditInputField value={timezoneOffset} stateToSet={setTimezoneOffset} />
+            <EditInputField value={user.timezoneOffset} handleChange={handleChange} name={'timezoneOffset'} />
           </p>
         </>
       ) :
         <>
-          <h3 className={styles.card__name}>{firstName} {lastName}</h3>
-          <p><span className={styles.card__sectionTitle}>Email:</span>{' '}{email}</p>
-          <p><span className={styles.card__sectionTitle}>Phone Number:</span>{' '}{phoneNumber}</p>
-          <p><span className={styles.card__sectionTitle}>Country</span>{' '}{country}</p>
-          <p><span className={styles.card__sectionTitle}>City:</span>{' '}{city}</p>
-          <p><span className={styles.card__sectionTitle}>State:</span>{' '}{state}</p>
-          <p><span className={styles.card__sectionTitle}>Time Zone Description:</span>{' '}{timezoneDescription}</p>
-          <p><span className={styles.card__sectionTitle}>Time Zone Offset:</span>{' '}{timezoneOffset}</p>
+          <h3 className={styles.card__name}>{user.firstName} {user.lastName}</h3>
+          <p><span className={styles.card__sectionTitle}>Email:</span>{' '}{user.email}</p>
+          <p><span className={styles.card__sectionTitle}>Phone Number:</span>{' '}{user.phone}</p>
+          <p><span className={styles.card__sectionTitle}>Country</span>{' '}{user.country}</p>
+          <p><span className={styles.card__sectionTitle}>City:</span>{' '}{user.city}</p>
+          <p><span className={styles.card__sectionTitle}>State:</span>{' '}{user.state}</p>
+          <p><span className={styles.card__sectionTitle}>Time Zone Description:</span>{' '}{user.timezoneDescription}</p>
+          <p><span className={styles.card__sectionTitle}>Time Zone Offset:</span>{' '}{user.timezoneOffset}</p>
         </>
       }
     </div >

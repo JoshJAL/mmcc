@@ -1,61 +1,72 @@
-import { User } from '../../types/user.types';
 import Card from '../card/Card';
 import styles from '../../App.module.css';
+import { useMemo } from 'react';
+import { DisplayedUser } from '../../types/displayedUser.types';
 
 interface CardsToDisplayProps {
   search: string;
-  users: User[];
+  users: DisplayedUser[];
   filter: string;
+  setUsers: React.Dispatch<React.SetStateAction<DisplayedUser[]>>;
 }
 
-export default function CardsToDisplay({ search, users, filter }: CardsToDisplayProps) {
+export default function CardsToDisplay({ search, users, filter, setUsers }: CardsToDisplayProps) {
+  const updateUser = (index: number) => (data: DisplayedUser) => {
+    setUsers((prev) => {
+      const temp = [...prev]
+      temp[index] = data
+      return temp
+    })
+  }
+
+  let filteredUsers = useMemo(() => {
+    return (
+      search
+        ? users
+          .filter(
+            (user: DisplayedUser) =>
+              user.firstName.toLowerCase().includes(search.toLowerCase()) ||
+              user.lastName.toLowerCase().includes(search.toLowerCase()) ||
+              (user.firstName.toLowerCase() + ' ' + user.lastName.toLowerCase()).includes(search.toLowerCase()) ||
+              user.email.toLowerCase().includes(search.toLowerCase()) ||
+              user.phone.includes(search) ||
+              user.city.toLowerCase().includes(search.toLowerCase()) ||
+              user.country.toLowerCase().includes(search.toLowerCase()) ||
+              user.state.toLowerCase().includes(search.toLowerCase()) ||
+              user.timezoneDescription.toLowerCase().includes(search.toLowerCase()) ||
+              user.timezoneOffset.toLowerCase().includes(search.toLowerCase()),
+          )
+        : filter
+          ? users
+            .sort((a: DisplayedUser, b: DisplayedUser) => {
+              if (filter === 'first') {
+                return a.firstName.localeCompare(b.firstName);
+              } else if (filter === 'last') {
+                return a.lastName.localeCompare(b.lastName);
+              } else if (filter === 'city') {
+                return a.city.localeCompare(b.city);
+              } else if (filter === 'email') {
+                return a.email.localeCompare(b.email);
+              } else if (filter === 'state') {
+                return a.state.localeCompare(b.state);
+              } else if (filter === 'country') {
+                return a.country.localeCompare(b.country);
+              } else if (filter === 'timezone') {
+                return a.timezoneOffset.localeCompare(b.timezoneOffset);
+              } else if (filter === 'timezoneDescription') {
+                return a.timezoneDescription.localeCompare(b.timezoneDescription);
+              } else {
+                return 0;
+              }
+            }) : users
+    )
+  }, [users, search, filter])
+
   return (
     <div className={styles.userList}>
-      {search ?
-        users.filter((user: User) =>
-          (user.name.first.toLowerCase().includes(search.toLowerCase())) ||
-          (user.name.last.toLowerCase().includes(search.toLowerCase())) ||
-          (user.name.first.toLowerCase() + ' ' + user.name.last.toLowerCase()).includes(search.toLowerCase()) ||
-          (user.email.toLowerCase().includes(search.toLowerCase())) ||
-          (user.cell.includes(search)) ||
-          (user.location.city.toLowerCase().includes(search.toLowerCase())) ||
-          (user.location.country.toLowerCase().includes(search.toLowerCase())) ||
-          (user.location.state.toLowerCase().includes(search.toLowerCase())) ||
-          (user.location.timezone.description.toLowerCase().includes(search.toLowerCase())) ||
-          (user.location.timezone.offset.toLowerCase().includes(search.toLowerCase()))
-        ).map(
-          (user: User) =>
-            (<Card key={user.login.uuid} user={user} />)
-        )
-        : filter ?
-          users.sort((a: User, b: User) => {
-            if (filter === 'first') {
-              return a.name.first.localeCompare(b.name.first);
-            } else if (filter === 'last') {
-              return a.name.last.localeCompare(b.name.last);
-            } else if (filter === 'city') {
-              return a.location.city.localeCompare(b.location.city);
-            } else if (filter === 'email') {
-              return a.email.localeCompare(b.email);
-            } else if (filter === 'state') {
-              return a.location.state.localeCompare(b.location.state);
-            } else if (filter === 'country') {
-              return a.location.country.localeCompare(b.location.country);
-            } else if (filter === 'timezone') {
-              return a.location.timezone.offset.localeCompare(b.location.timezone.offset);
-            } else if (filter === 'timezoneDescription') {
-              return a.location.timezone.description.localeCompare(b.location.timezone.description);
-            } else {
-              return 0;
-            }
-          }).map((user: User) => (
-            <Card key={user.login.uuid} user={user} />
-          ))
-          :
-          users.map((user: User) => (
-            <Card key={user.login.uuid} user={user} />
-          ))
-      }
+      {filteredUsers.map((user: DisplayedUser, index: number) => (
+        <Card key={user.uuid} user={user} updateUser={updateUser(index)} />
+      ))}
     </div>
   )
 }
