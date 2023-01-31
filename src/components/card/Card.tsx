@@ -16,7 +16,7 @@ export default function Card({ user, updateUser }: { user: DisplayedUser, update
   return (
     <div className={styles.card} >
       <p className={styles.card__button} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</p>
-      <img className={styles.card__picture} src={user.picture} />
+      <img className={styles.card__picture} src={user.picture} alt='User' />
       {editing ? (
         <>
           <h3 className={styles.card__name}>
